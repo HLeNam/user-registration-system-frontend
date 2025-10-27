@@ -13,10 +13,18 @@ import { useAppContext } from "@/contexts";
 import { useLogoutUser } from "@/hooks/useAuth";
 import { useErrorHandler } from "@/hooks/useErrorHandler";
 import { Link } from "react-router";
+import { Spinner } from "@/components/ui/spinner";
+import { useEffect } from "react";
 
 const UserDropdownMenu = ({ children }: { children: React.ReactNode }) => {
     const logoutUserMutation = useLogoutUser();
     const { handleError } = useErrorHandler({});
+
+    useEffect(() => {
+        if (logoutUserMutation.isError) {
+            handleError(logoutUserMutation.error);
+        }
+    }, [logoutUserMutation.isError, logoutUserMutation.error, handleError]);
 
     const handleLogout = async () => {
         try {
@@ -27,17 +35,25 @@ const UserDropdownMenu = ({ children }: { children: React.ReactNode }) => {
     };
 
     return (
-        <DropdownMenu>
-            <DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
-            <DropdownMenuContent className="w-56" align="start">
-                <DropdownMenuLabel>My Account</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={handleLogout}>
-                    Log out
-                    <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
-                </DropdownMenuItem>
-            </DropdownMenuContent>
-        </DropdownMenu>
+        <>
+            <DropdownMenu>
+                <DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
+                <DropdownMenuContent className="w-56" align="start">
+                    <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={handleLogout}>
+                        Log out
+                        <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
+                    </DropdownMenuItem>
+                </DropdownMenuContent>
+            </DropdownMenu>
+
+            {logoutUserMutation.isPending && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+                    <Spinner className="size-12 text-white" />
+                </div>
+            )}
+        </>
     );
 };
 

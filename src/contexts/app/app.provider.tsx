@@ -8,11 +8,12 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
     const [isAuthenticated, setIsAuthenticated] = useState(INITIAL_APP_STATE.isAuthenticated);
     const queryClient = useQueryClient();
 
-    const isInAuthenticatedRoute =
-        window.location.pathname.includes("/login") ||
-        window.location.pathname.includes("/register");
+    // const isInAuthenticatedRoute =
+    //     window.location.pathname.includes("/login") ||
+    //     window.location.pathname.includes("/register");
 
-    const { data, isLoading, error } = useGetUserProfile(isInAuthenticatedRoute ? false : true);
+    // const { data, isLoading, error } = useGetUserProfile(isInAuthenticatedRoute ? false : true);
+    const { data, isLoading, error } = useGetUserProfile();
     console.log("🚀 ~ AppProvider ~ error:", error);
 
     useEffect(() => {
