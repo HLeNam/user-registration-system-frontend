@@ -66,7 +66,7 @@ const Header = () => {
                                     <span className="hidden md:inline">Hello, </span>
                                     {userProfile.email}
                                 </span>
-                                <span className="text-gray-400 text-sm block">
+                                <span className="text-gray-400 text-sm block text-nowrap">
                                     Joined At:{" "}
                                     {new Date(userProfile.createdAt).toLocaleDateString()}
                                 </span>
