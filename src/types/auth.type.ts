@@ -28,8 +28,20 @@ export type LoginResponse = {
 export const registerSchema = z
     .object({
         email: z.email("Invalid email address"),
-        password: z.string().min(6, "Password must be at least 6 characters"),
-        confirmPassword: z.string().min(6, "Password must be at least 6 characters"),
+        password: z
+            .string()
+            .min(6, "Password must be at least 6 characters")
+            .refine((val) => /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(val), {
+                message:
+                    "Password must contain at least one lowercase letter, one uppercase letter, and one number",
+            }),
+        confirmPassword: z
+            .string()
+            .min(6, "Confirm Password must be at least 6 characters")
+            .refine((val) => /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(val), {
+                message:
+                    "Confirm password must contain at least one lowercase letter, one uppercase letter, and one number",
+            }),
     })
     .refine((data) => data.password === data.confirmPassword, {
         message: "Passwords don't match",

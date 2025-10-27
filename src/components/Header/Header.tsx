@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -57,7 +58,10 @@ const Header = () => {
             </Link>
             <nav className="flex items-center">
                 {isLoadingUserProfile ? (
-                    <></>
+                    <div className="flex flex-col items-end gap-2">
+                        <Skeleton className="h-5 w-40 bg-gray-700" />
+                        <Skeleton className="h-4 w-36 bg-gray-700" />
+                    </div>
                 ) : userProfile ? (
                     <>
                         <UserDropdownMenu>
