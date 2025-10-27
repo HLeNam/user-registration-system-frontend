@@ -8,19 +8,19 @@ const ErrorPage = () => {
 
     let errorMessage: string;
     let errorStatus: number | string = "Unknown";
-    let errorType = "Lỗi không xác định";
+    let errorType = "Unknown Error";
 
     if (isRouteErrorResponse(error)) {
         errorMessage = error.data?.message || error.statusText;
         errorStatus = error.status;
-        errorType = error.status === 404 ? "Không tìm thấy trang" : "Lỗi server";
+        errorType = error.status === 404 ? "Page Not Found" : "Server Error";
     } else if (error instanceof Error) {
         errorMessage = error.message;
-        errorType = "Lỗi JavaScript";
+        errorType = "JavaScript Error";
     } else if (typeof error === "string") {
         errorMessage = error;
     } else {
-        errorMessage = "Đã xảy ra lỗi không mong muốn";
+        errorMessage = "An unexpected error occurred";
     }
 
     const handleGoBack = () => {
@@ -34,30 +34,18 @@ const ErrorPage = () => {
     const is404 = errorStatus === 404;
 
     return (
-        <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-indigo-50 via-white to-purple-50 p-4">
+        <div className="flex min-h-screen items-center justify-center bg-gray-50 p-4">
             <div className="w-full max-w-2xl">
                 {/* Main Error Card */}
-                <div className="overflow-hidden rounded-3xl border border-gray-100 bg-white shadow-2xl">
-                    {/* Animated Header */}
-                    <div
-                        className={`${
-                            is404
-                                ? "bg-gradient-to-r from-purple-500 to-pink-500"
-                                : "bg-gradient-to-r from-red-500 to-orange-500"
-                        } relative overflow-hidden px-8 py-8`}
-                    >
-                        {/* Background Animation */}
-                        <div className="absolute inset-0 opacity-20">
-                            <div className="absolute -top-4 -right-4 h-24 w-24 animate-pulse rounded-full bg-white"></div>
-                            <div className="absolute -bottom-4 -left-4 h-32 w-32 animate-pulse rounded-full bg-white delay-1000"></div>
-                        </div>
-
-                        <div className="relative flex items-center space-x-6">
+                <div className="rounded-lg border border-gray-200 bg-white shadow-sm">
+                    {/* Header */}
+                    <div className="border-b border-gray-200 px-8 py-6">
+                        <div className="flex items-center space-x-4">
                             {/* Error Icon */}
-                            <div className="rounded-2xl bg-white/20 p-4 backdrop-blur-sm">
+                            <div className="rounded-lg bg-gray-100 p-3">
                                 {is404 ? (
                                     <svg
-                                        className="h-12 w-12 text-white"
+                                        className="h-8 w-8 text-gray-600"
                                         fill="none"
                                         stroke="currentColor"
                                         viewBox="0 0 24 24"
@@ -71,7 +59,7 @@ const ErrorPage = () => {
                                     </svg>
                                 ) : (
                                     <svg
-                                        className="h-12 w-12 text-white"
+                                        className="h-8 w-8 text-gray-600"
                                         fill="none"
                                         stroke="currentColor"
                                         viewBox="0 0 24 24"
@@ -87,37 +75,35 @@ const ErrorPage = () => {
                             </div>
 
                             <div>
-                                <div className="mb-2 flex items-center space-x-3">
-                                    <span className="text-6xl font-bold text-white">
+                                <div className="mb-1 flex items-center space-x-3">
+                                    <span className="text-4xl font-bold text-gray-900">
                                         {errorStatus}
                                     </span>
                                     {errorStatus !== "Unknown" && (
-                                        <div className="rounded-full bg-white/20 px-3 py-1 backdrop-blur-sm">
-                                            <span className="text-sm font-medium text-white">
-                                                {errorType}
-                                            </span>
-                                        </div>
+                                        <span className="rounded bg-gray-100 px-2 py-1 text-xs font-medium text-gray-600">
+                                            {errorType}
+                                        </span>
                                     )}
                                 </div>
-                                <h1 className="mb-1 text-2xl font-bold text-white">
-                                    {is404 ? "Trang không tồn tại" : "Có lỗi xảy ra"}
+                                <h1 className="text-xl font-semibold text-gray-900">
+                                    {is404 ? "Page Not Found" : "An Error Occurred"}
                                 </h1>
-                                <p className="text-white/90">
+                                <p className="text-sm text-gray-600">
                                     {is404
-                                        ? "Trang bạn đang tìm kiếm không tồn tại hoặc đã được di chuyển"
-                                        : "Đã xảy ra lỗi không mong muốn"}
+                                        ? "The page you're looking for doesn't exist or has been moved"
+                                        : "An unexpected error has occurred"}
                                 </p>
                             </div>
                         </div>
                     </div>
 
                     {/* Content */}
-                    <div className="px-8 py-8">
+                    <div className="px-8 py-6">
                         {/* Error Message */}
-                        <div className="mb-8">
-                            <h2 className="mb-3 flex items-center text-lg font-semibold text-gray-800">
+                        <div className="mb-6">
+                            <h2 className="mb-2 flex items-center text-sm font-medium text-gray-700">
                                 <svg
-                                    className="mr-2 h-5 w-5 text-gray-600"
+                                    className="mr-2 h-4 w-4 text-gray-500"
                                     fill="none"
                                     stroke="currentColor"
                                     viewBox="0 0 24 24"
@@ -129,23 +115,21 @@ const ErrorPage = () => {
                                         d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                                     />
                                 </svg>
-                                Chi tiết lỗi:
+                                Error Details:
                             </h2>
-                            <div className="rounded-xl border-l-4 border-gray-400 bg-gradient-to-r from-gray-50 to-gray-100 p-4">
-                                <p className="font-mono text-sm leading-relaxed text-gray-700">
-                                    {errorMessage}
-                                </p>
+                            <div className="rounded border border-gray-200 bg-gray-50 p-4">
+                                <p className="font-mono text-sm text-gray-700">{errorMessage}</p>
                             </div>
                         </div>
 
                         {/* Action Buttons */}
-                        <div className="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2">
+                        <div className="mb-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
                             <button
                                 onClick={handleGoBack}
-                                className="group flex transform items-center justify-center space-x-3 rounded-xl bg-gradient-to-r from-blue-500 to-blue-600 px-6 py-4 font-semibold text-white transition-all duration-300 hover:scale-105 hover:from-blue-600 hover:to-blue-700 hover:shadow-xl"
+                                className="flex items-center justify-center space-x-2 rounded border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
                             >
                                 <svg
-                                    className="h-5 w-5 transform transition-transform group-hover:-translate-x-1"
+                                    className="h-4 w-4"
                                     fill="none"
                                     stroke="currentColor"
                                     viewBox="0 0 24 24"
@@ -157,15 +141,15 @@ const ErrorPage = () => {
                                         d="M10 19l-7-7m0 0l7-7m-7 7h18"
                                     />
                                 </svg>
-                                <span>Quay lại</span>
+                                <span>Go Back</span>
                             </button>
 
                             <button
                                 onClick={handleGoHome}
-                                className="group flex transform items-center justify-center space-x-3 rounded-xl bg-gradient-to-r from-green-500 to-green-600 px-6 py-4 font-semibold text-white transition-all duration-300 hover:scale-105 hover:from-green-600 hover:to-green-700 hover:shadow-xl"
+                                className="flex items-center justify-center space-x-2 rounded border border-gray-300 bg-gray-900 px-4 py-2 text-sm font-medium text-white hover:bg-gray-800"
                             >
                                 <svg
-                                    className="h-5 w-5 transform transition-transform group-hover:scale-110"
+                                    className="h-4 w-4"
                                     fill="none"
                                     stroke="currentColor"
                                     viewBox="0 0 24 24"
@@ -177,17 +161,17 @@ const ErrorPage = () => {
                                         d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
                                     />
                                 </svg>
-                                <span>Về trang chủ</span>
+                                <span>Go Home</span>
                             </button>
                         </div>
 
                         {/* Refresh Button */}
                         <button
                             onClick={() => window.location.reload()}
-                            className="mb-6 flex w-full items-center justify-center space-x-2 rounded-lg bg-gradient-to-r from-gray-500 to-gray-600 px-6 py-3 font-medium text-white transition-all duration-200 hover:from-gray-600 hover:to-gray-700"
+                            className="mb-6 flex w-full items-center justify-center space-x-2 rounded border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
                         >
                             <svg
-                                className="h-4 w-4 animate-spin"
+                                className="h-4 w-4"
                                 fill="none"
                                 stroke="currentColor"
                                 viewBox="0 0 24 24"
@@ -199,15 +183,15 @@ const ErrorPage = () => {
                                     d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
                                 />
                             </svg>
-                            <span>Tải lại trang</span>
+                            <span>Reload Page</span>
                         </button>
 
                         {/* Help Section */}
-                        <div className="rounded-2xl border border-blue-100 bg-gradient-to-r from-blue-50 to-indigo-50 p-6">
-                            <div className="flex items-start space-x-4">
-                                <div className="flex-shrink-0 rounded-full bg-blue-100 p-2">
+                        <div className="rounded border border-gray-200 bg-gray-50 p-4">
+                            <div className="flex items-start space-x-3">
+                                <div className="flex-shrink-0 rounded bg-gray-200 p-1.5">
                                     <svg
-                                        className="h-5 w-5 text-blue-600"
+                                        className="h-4 w-4 text-gray-600"
                                         fill="none"
                                         stroke="currentColor"
                                         viewBox="0 0 24 24"
@@ -221,21 +205,21 @@ const ErrorPage = () => {
                                     </svg>
                                 </div>
                                 <div>
-                                    <h3 className="mb-2 text-lg font-semibold text-blue-800">
-                                        Cần trợ giúp?
+                                    <h3 className="mb-2 text-sm font-medium text-gray-900">
+                                        Need Help?
                                     </h3>
-                                    <ul className="space-y-2 text-sm text-blue-700">
+                                    <ul className="space-y-1 text-sm text-gray-600">
                                         <li className="flex items-center space-x-2">
-                                            <div className="h-1.5 w-1.5 rounded-full bg-blue-400"></div>
-                                            <span>Kiểm tra lại URL bạn đã nhập</span>
+                                            <div className="h-1 w-1 rounded-full bg-gray-400"></div>
+                                            <span>Check the URL you entered</span>
                                         </li>
                                         <li className="flex items-center space-x-2">
-                                            <div className="h-1.5 w-1.5 rounded-full bg-blue-400"></div>
-                                            <span>Thử tải lại trang sau vài giây</span>
+                                            <div className="h-1 w-1 rounded-full bg-gray-400"></div>
+                                            <span>Try reloading the page after a few seconds</span>
                                         </li>
                                         <li className="flex items-center space-x-2">
-                                            <div className="h-1.5 w-1.5 rounded-full bg-blue-400"></div>
-                                            <span>Liên hệ bộ phận hỗ trợ nếu lỗi vẫn tiếp tục</span>
+                                            <div className="h-1 w-1 rounded-full bg-gray-400"></div>
+                                            <span>Contact support if the error persists</span>
                                         </li>
                                     </ul>
                                 </div>
@@ -245,10 +229,10 @@ const ErrorPage = () => {
                 </div>
 
                 {/* Footer */}
-                <div className="mt-6 text-center">
-                    <p className="text-sm text-gray-500">
-                        Mã lỗi:{" "}
-                        <span className="rounded bg-gray-100 px-2 py-1 font-mono">
+                <div className="mt-4 text-center">
+                    <p className="text-xs text-gray-500">
+                        Error Code:{" "}
+                        <span className="rounded bg-gray-100 px-2 py-0.5 font-mono text-gray-700">
                             {Date.now().toString(36).toUpperCase()}
                         </span>
                     </p>

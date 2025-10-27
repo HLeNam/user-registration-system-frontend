@@ -11,19 +11,21 @@ const NotFound = () => {
                         404
                     </h1>
                     <p className="mb-4 text-3xl font-bold tracking-tight md:text-4xl">
-                        {/* Something's missing. */}
-                        Không tìm thấy trang này.
+                        Something's missing.
+                        {/* Không tìm thấy trang này. */}
                     </p>
                     <p className="mb-4 text-lg font-light text-gray-500">
-                        {/* Sorry, we can't find that page. You'll find lots to explore on the home page. */}
-                        Rất tiếc, chúng tôi không thể tìm thấy trang đó. Bạn có thể tìm thấy nhiều
-                        điều thú vị để khám phá trên trang chủ.
+                        Sorry, we can't find that page. You'll find lots to explore on the home
+                        page.
+                        {/* Rất tiếc, chúng tôi không thể tìm thấy trang đó. Bạn có thể tìm thấy nhiều
+                        điều thú vị để khám phá trên trang chủ. */}
                     </p>
                     <Link
                         to={mergeUrlPaths(PATH.home)}
                         className="bg-orange hover:bg-orange/80 focus:ring-orange/80 my-4 inline-flex rounded-lg px-5 py-2.5 text-center text-sm font-medium text-white focus:ring-4 focus:outline-none"
                     >
-                        Quay về trang chủ
+                        Go back home
+                        {/* Quay về trang chủ */}
                     </Link>
                 </div>
             </div>

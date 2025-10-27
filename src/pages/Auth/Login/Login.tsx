@@ -1,26 +1,19 @@
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
 import { LoaderCircle, LockKeyhole, LogIn, Mail } from "lucide-react";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { Button } from "@/components/ui/button";
 import { InputWithIcon } from "@/components/ui/input";
 import { LeftSideContent } from "@/pages/Auth/components";
 import { toast } from "sonner";
-
-// 1. Login Schema
-const loginSchema = z.object({
-    email: z.string().email("Invalid email address"),
-    password: z.string().min(6, "Password must be at least 6 characters"),
-});
-
-type LoginType = z.infer<typeof loginSchema>;
+import { loginSchema, type LoginType } from "@/types/auth.type";
+import { useLoginUser } from "@/hooks/useAuth";
+import { useErrorHandler } from "@/hooks/useErrorHandler";
 
 const Login = () => {
-    const [isLoading, setIsLoading] = useState(false);
+    const navigate = useNavigate();
 
     const form = useForm<LoginType>({
         resolver: zodResolver(loginSchema),
@@ -29,19 +22,30 @@ const Login = () => {
             password: "",
         },
     });
+
+    const loginUserMutation = useLoginUser();
+
+    const isLoading = loginUserMutation.isPending;
+
+    const { handleError } = useErrorHandler<LoginType>({ form });
+
     const onSubmit = async (data: LoginType) => {
-        console.log(data);
-        setIsLoading(true);
         try {
-            //    const result = await signIn("credentials", {
+            const res = await loginUserMutation.mutateAsync(data);
+
+            console.log("🚀 ~ onSubmit ~ res:", res);
+
             toast.success("Login successful!", {
                 position: "top-right",
             });
+
+            setTimeout(() => {
+                navigate("/");
+            }, 500);
         } catch (error) {
-            console.error("Login error:", error);
-            // toast.error("An unexpected error occurred. Please try again later.");
-        } finally {
-            setIsLoading(false);
+            console.error("Login error:", JSON.stringify(error, null, 2));
+
+            handleError(error);
         }
     };
 

@@ -1,32 +1,19 @@
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
 import { LoaderCircle, LockKeyhole, LogIn, Mail } from "lucide-react";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { Button } from "@/components/ui/button";
 import { InputWithIcon } from "@/components/ui/input";
 import { LeftSideContent } from "@/pages/Auth/components";
 import { toast } from "sonner";
-
-// 1. Register Schema
-const registerSchema = z
-    .object({
-        email: z.email("Invalid email address"),
-        password: z.string().min(6, "Password must be at least 6 characters"),
-        confirmPassword: z.string().min(6, "Password must be at least 6 characters"),
-    })
-    .refine((data) => data.password === data.confirmPassword, {
-        message: "Passwords don't match",
-        path: ["confirmPassword"],
-    });
-
-type RegisterType = z.infer<typeof registerSchema>;
+import { registerSchema, type RegisterRequest, type RegisterType } from "@/types/auth.type";
+import { useRegisterUser } from "@/hooks/useAuth";
+import { useErrorHandler } from "@/hooks/useErrorHandler";
 
 const Register = () => {
-    const [isLoading, setIsLoading] = useState(false);
+    const navigate = useNavigate();
 
     const form = useForm<RegisterType>({
         resolver: zodResolver(registerSchema),
@@ -37,19 +24,31 @@ const Register = () => {
         },
     });
 
+    const registerUserMutation = useRegisterUser();
+    const isLoading = registerUserMutation.isPending;
+    const { handleError } = useErrorHandler<RegisterType>({ form });
+
     const onSubmit = async (data: RegisterType) => {
-        console.log(data);
-        setIsLoading(true);
         try {
-            //    const result = await signIn("credentials", {
-            toast.success("Login successful!", {
+            const persian: RegisterRequest = {
+                email: data.email,
+                password: data.password,
+            };
+
+            const res = await registerUserMutation.mutateAsync(persian);
+
+            console.log("🚀 ~ onSubmit ~ res:", res);
+
+            toast.success("Registration successful!", {
                 position: "top-right",
             });
+
+            setTimeout(() => {
+                navigate("/");
+            }, 500);
         } catch (error) {
-            console.error("Login error:", error);
-            // toast.error("An unexpected error occurred. Please try again later.");
-        } finally {
-            setIsLoading(false);
+            console.error("Registration error:", error);
+            handleError(error);
         }
     };
 
